@@ -38,6 +38,8 @@ services:
       - JAVA_OPTIONS=-Dfcrepo.modeshape.configuration=classpath:/config/file-simple/repository.json -Dfcrepo.home=/data
     networks:
       internal:
+#    ports:
+#      - '8080:8080'
   fedora-test:
     <<: *fedora
     volumes: []
@@ -54,6 +56,8 @@ services:
       - /opt/solr/avalon_conf
     networks:
       internal:
+#    ports:
+#      - '8983:8983'
   solr-test:
     <<: *solr
     volumes:
@@ -82,7 +86,8 @@ services:
     build:
       context: .
       target: dev
-    command: bash -c "/docker_init.sh && bin/rails server -b 0.0.0.0"
+#    command: bash -c "/docker_init.sh && bin/rails server -b 0.0.0.0"
+    command: bash
     depends_on:
       - db
       - fedora
@@ -150,7 +155,8 @@ services:
 
   worker:
     <<: *avalon
-    command: dumb-init -- bash -c "bundle install && bundle exec sidekiq -C config/sidekiq.yml"
+#    command: dumb-init -- bash -c "bundle install && bundle exec sidekiq -C config/sidekiq.yml"
+    command: bash
     ports: []
 
   # minio:
