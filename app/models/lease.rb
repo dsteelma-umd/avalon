@@ -28,6 +28,7 @@ class Lease < ActiveFedora::Base
   scope :user,     -> { where(lease_type_ssi: "user")     }
   scope :external, -> { where(lease_type_ssi: "external") }
   scope :ip,       -> { where(lease_type_ssi: "ip")       }
+  scope :umd_ip_manager, -> { where(lease_type_ssi: "umd_ip_manager") }
 
   before_save :apply_default_begin_time, :ensure_end_time_present, :validate_dates#, :format_times
 
@@ -158,6 +159,7 @@ private
     return nil if group.nil?
     return "ip" if IPAddr.new(group) rescue false
     return "local" if Admin::Group.exists? group
+    return "umd_ip_manager" if UmdIPManager::Group.valid_prefixed_key?(group)
     return "external"
   end
 
