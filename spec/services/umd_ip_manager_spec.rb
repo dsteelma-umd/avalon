@@ -114,6 +114,8 @@ describe UmdIPManager::GroupsResult do
 end
 
 describe UmdIPManager::Group do
+  EXPECTED_PREFIX = 'umd.ip.manager:'
+
   it 'provides the base_key for a group' do
     group = described_class.new(base_key: 'test-base-key', name: 'Test')
     expect(group.base_key).to eq('test-base-key')
@@ -121,7 +123,7 @@ describe UmdIPManager::Group do
 
   it 'provides the prefixed_key for a group' do
     group = described_class.new(base_key: 'test-base-key', name: 'Test')
-    expect(group.prefixed_key).to eq('umd.ip.manager:test-base-key')
+    expect(group.prefixed_key).to eq("#{EXPECTED_PREFIX}test-base-key")
   end
 
   it 'provides the name of the group' do
@@ -143,7 +145,7 @@ describe UmdIPManager::Group do
       group = described_class.new(base_key: 'test-base-key', name: 'Test')
       expect(group.base_key).to eq('test-base-key')
       expect(group.name).to eq('Test')
-      expect(group.prefixed_key).to eq('umd.ip.manager:test-base-key')
+      expect(group.prefixed_key).to eq("#{EXPECTED_PREFIX}test-base-key")
     end
   end
 
@@ -163,7 +165,7 @@ describe UmdIPManager::Group do
     end
 
     it 'returns the given base_key prefixed with UmdIPManager::Group.PREFIX' do
-      expect(described_class.as_prefixed_key('foo')).to eq('umd.ip.manager:foo')
+      expect(described_class.as_prefixed_key('foo')).to eq("#{EXPECTED_PREFIX}foo")
     end
   end
 
@@ -177,17 +179,37 @@ describe UmdIPManager::Group do
         expect { described_class.as_base_key('') }.to raise_error(ArgumentError)
       end
 
-      it 'when given an prefixed_key of only whitespace' do
+      it 'when given a prefixed_key of only whitespace' do
         expect { described_class.as_base_key("  \t  ") }.to raise_error(ArgumentError)
       end
 
-      it 'when given an prefixed_key without the expected prefix' do
+      it 'when given a prefixed_key without the expected prefix' do
         expect { described_class.as_base_key("UNEXPECTED_PREFIX") }.to raise_error(ArgumentError)
       end
     end
 
     it 'returns the given prefixed_key without the UmdIPManager::Group.PREFIX' do
-      expect(described_class.as_base_key('umd.ip.manager:foo')).to eq('foo')
+      expect(described_class.as_base_key("#{EXPECTED_PREFIX}foo")).to eq('foo')
+    end
+  end
+
+  context '.valid_prefixed_key?' do
+    context 'return false' do
+      it 'when given a nil prefixed_key' do
+        expect(described_class.valid_prefixed_key?(nil)).to be(false)
+      end
+
+      it 'when given an empty prefixed_key' do
+        expect(described_class.valid_prefixed_key?('')).to be(false)
+      end
+
+      it 'when given a prefixed_key without the expected prefix' do
+        expect(described_class.valid_prefixed_key?("UNEXPECTED_PREFIX:test")).to be(false)
+      end
+    end
+
+    it 'returns true when given prefixed_key with the expected prefix' do
+      expect(described_class.valid_prefixed_key?("#{EXPECTED_PREFIX}foo")).to be(true)
     end
   end
 end

@@ -44,14 +44,23 @@ class UmdIPManager
       @prefixed_key = Group.as_prefixed_key(base_key)
     end
 
+    # Returns the prefixed key for the given base key.
     def self.as_prefixed_key(base_key)
       raise ArgumentError, "invalid argument: base_key='#{base_key}'" unless base_key.present?
       "#{PREFIX}#{base_key}"
     end
 
+    # Returns the base key for the given prefixed key.
     def self.as_base_key(prefixed_key)
       raise ArgumentError, 'prefixed_key does not start with expected prefix' unless prefixed_key&.starts_with?(PREFIX)
       prefixed_key.delete_prefix(PREFIX)
+    end
+
+    # Returns true if the given prefixed_key is a valid prefixed key, false
+    # otherwise
+    def self.valid_prefixed_key?(prefixed_key)
+      return false if prefixed_key.nil?
+      prefixed_key.starts_with?(PREFIX)
     end
   end
 
@@ -63,6 +72,7 @@ class UmdIPManager
       @errors = errors
     end
 
+    # Returns true if no errors occurred, false otherwise.
     def success?
       @errors.empty?
     end
