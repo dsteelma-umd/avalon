@@ -88,7 +88,7 @@ pipeline {
       steps {
         sh '''
           # Start the Avalon Docker containers for testing
-          # docker-compose up -d test
+          docker-compose up -d test
         '''
       }
     }
@@ -97,17 +97,19 @@ pipeline {
       steps {
         sh '''
           # Run rspec tests, with JUNit-formatted output
-          # docker-compose exec -T test bash -c "bundle exec rspec --format RspecJunitFormatter --out rspec.xml"
+          docker-compose exec -T test bash -c "bundle exec rspec --format RspecJunitFormatter --out rspec.xml"
         '''
       }
       post {
         always {
           sh '''
-            # docker-compose down
+            # Stop Avalon Docker containers, using "--volumes" flag to delete
+            # all volumes
+            docker-compose down --volumes
           '''
 
           // Process JUnit-formatter test output
-          // junit 'rspec.xml'
+          junit 'rspec.xml'
         }
       }
     }
