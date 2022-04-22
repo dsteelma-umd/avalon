@@ -52,7 +52,11 @@ pipeline {
            |
            |Check console output at $BUILD_URL to view the results.
            |
-           | No tests were run.'''.stripMargin()
+           |There were ${TEST_COUNTS,var="fail"} failed tests.
+           |
+           |There are ${ANALYSIS_ISSUES_COUNT} static analysis issues in this build.
+           |
+           |There were ${TEST_COUNTS,var="skip"} skipped tests.'''.stripMargin()
   }
 
   stages {
