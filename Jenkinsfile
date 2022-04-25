@@ -88,55 +88,61 @@ pipeline {
       }
     }
 
-    stage('build') {
-      steps {
-        sh '''
-          # Purge any volumes not in use by a container
-          docker system prune --force --volumes
+    // Lock the AVALON_SINGLE_BUILD_ resource to prevent multiple Avalon
+    // jobs from running simultaneously. This is done to prevent Avalon
+    // from taking up all available executors.
+    lock(resource: "AVALON_SINGLE_BUILD_${env.NODE_NAME}") {
 
-          # Start the Avalon Docker containers for testing
-          docker-compose up -d test
-        '''
-      }
-    }
-
-    stage('test') {
-      steps {
-        sh '''
-          # Run rspec tests, with JUNit-formatted output
-          docker-compose exec -T test bash -c "bundle exec rspec --format RspecJunitFormatter --out rspec.xml"
-        '''
-      }
-      post {
-        always {
+      stage('build') {
+        steps {
           sh '''
-            # Stop Avalon Docker containers, using "--volumes" flag to delete
-            # all volumes
-            docker-compose down --volumes
-          '''
+            # Purge any volumes not in use by a container
+            docker system prune --force --volumes
 
-          // Process JUnit-formatter test output
-          junit 'rspec.xml'
+            # Start the Avalon Docker containers for testing
+            docker-compose up -d test
+          '''
         }
       }
-    }
 
-    // stage('static-analysis') {
-    //   steps {
-    //     sh '''
-    //       # Run Rubocop/static analysis tools
-    //     '''
-    //   }
-    //   post {
-    //     always {
-    //       // Collect static analysis reports
-    //     }
-    //   }
-    // }
+      stage('test') {
+        steps {
+          sh '''
+            # Run rspec tests, with JUNit-formatted output
+            docker-compose exec -T test bash -c "bundle exec rspec --format RspecJunitFormatter --out rspec.xml"
+          '''
+        }
+        post {
+          always {
+            sh '''
+              # Stop Avalon Docker containers, using "--volumes" flag to delete
+              # all volumes
+              docker-compose down --volumes
+            '''
 
-    stage('clean-workspace') {
-      steps {
-        cleanWs()
+            // Process JUnit-formatter test output
+            junit 'rspec.xml'
+          }
+        }
+      }
+
+      // stage('static-analysis') {
+      //   steps {
+      //     sh '''
+      //       # Run Rubocop/static analysis tools
+      //     '''
+      //   }
+      //   post {
+      //     always {
+      //       // Collect static analysis reports
+      //     }
+      //   }
+      // }
+
+      stage('clean-workspace') {
+        steps {
+          cleanWs()
+        }
       }
     }
   }
