@@ -91,6 +91,9 @@ pipeline {
     stage('build') {
       steps {
         sh '''
+          # Purge any volumes not in use by a container
+          docker system prune --force --volumes
+
           # Start the Avalon Docker containers for testing
           docker-compose up -d test
         '''
