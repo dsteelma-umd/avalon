@@ -355,7 +355,7 @@ class MediaObject < ActiveFedora::Base
     else
       actors << "collection staff" if visibility == "private"
       actors << "specific users" if read_users.any? || leases('user').any?
-
+      # -- TODO - need anything here for UMD IP Manager Groups?
       if visibility == "restricted"
         actors << "logged-in users"
       elsif virtual_read_groups.any? || local_read_groups.any? || leases('external').any? || leases('local').any?

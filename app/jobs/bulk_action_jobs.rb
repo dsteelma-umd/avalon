@@ -23,7 +23,7 @@ module BulkActionJobs
         media_object.hidden = params[:hidden] if !params[:hidden].nil?
         media_object.visibility = params[:visibility] unless params[:visibility].blank?
         # Limited access stuff
-        ["group", "class", "user", "ipaddress"].each do |title|
+        ["group", "class", "user", "ipaddress", "umd_ip_manager_group"].each do |title|
           if params["submit_add_#{title}"].present?
             begin_time = params["add_#{title}_begin"].blank? ? nil : params["add_#{title}_begin"]
             end_time = params["add_#{title}_end"].blank? ? nil : params["add_#{title}_end"]
@@ -70,7 +70,7 @@ module BulkActionJobs
           end
           if params["submit_remove_#{title}"].present?
             if params[title].present?
-              if ["group", "class", "ipaddress"].include? title
+              if ["group", "class", "ipaddress", "umd_ip_manager_group"].include? title
                 media_object.read_groups -= [params[title]]
                 media_object.governing_policies.each do |policy|
                   if policy.class==Lease && policy.inherited_read_groups.include?(params[title])

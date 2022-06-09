@@ -58,6 +58,9 @@ class Admin::Collection < ActiveFedora::Base
   property :default_read_groups, predicate: Avalon::RDFVocab::Collection.default_read_groups, multiple: true do |index|
     index.as :symbol
   end
+  property :default_umd_ip_manager_read_groups, predicate: Avalon::RDFVocab::Collection.default_umd_ip_manager_read_groups, multiple: true do |index|
+    index.as :symbol
+  end
   property :default_hidden, predicate: Avalon::RDFVocab::Collection.default_hidden, multiple: false do |index|
     index.as ActiveFedora::Indexing::Descriptor.new(:boolean, :stored, :indexed)
   end
@@ -232,8 +235,12 @@ class Admin::Collection < ActiveFedora::Base
     self.default_read_groups.select {|g| IPAddr.new(g) rescue false }
   end
 
+  def default_umd_ip_manager_read_groups
+    self.default_read_groups.select {|g| UmdIPManager::Group.valid_prefixed_key?(g) }
+  end
+
   def default_virtual_read_groups
-    self.default_read_groups.to_a - represented_default_visibility - default_local_read_groups - default_ip_read_groups
+    self.default_read_groups.to_a - represented_default_visibility - default_local_read_groups - default_ip_read_groups - default_umd_ip_manager_read_groups
   end
 
   def default_visibility=(value)

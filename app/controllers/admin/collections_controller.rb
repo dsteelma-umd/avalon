@@ -55,10 +55,12 @@ class Admin::CollectionsController < ApplicationController
         @users = @collection.default_read_users
         @virtual_groups = @collection.default_virtual_read_groups
         @ip_groups = @collection.default_ip_read_groups
+        @umd_ip_manager_groups = @collection.default_umd_ip_manager_read_groups
         @visibility = @collection.default_visibility
 
         @addable_groups = Admin::Group.non_system_groups.reject { |g| @groups.include? g.name }
         @addable_courses = Course.all.reject { |c| @virtual_groups.include? c.context_id }
+        @addable_umd_ip_manager_groups = UmdIPManager.groups
       }
     end
   end
@@ -261,7 +263,7 @@ class Admin::CollectionsController < ApplicationController
 
   def update_access(collection, params)
     # If Save Access Setting button or Add/Remove User/Group button has been clicked
-    ["group", "class", "user", "ipaddress"].each do |title|
+    ["group", "class", "user", "ipaddress", "umd_ip_manager_group"].each do |title|
       if params["submit_add_#{title}"].present?
         if params["add_#{title}"].present?
           val = params["add_#{title}"].strip

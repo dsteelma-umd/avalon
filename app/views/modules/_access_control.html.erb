@@ -172,5 +172,9 @@ Unless required by applicable law or agreed to in writing, software distributed
     <%= render "modules/access_object", object: object,
           access_object: "ipaddress", members: @ip_groups, leases: @ip_leases,
           input_disabled: !can_update %>
+    <%= render "modules/access_object", object: object,
+          access_object: "umd_ip_manager_group", members: @umd_ip_manager_groups, leases: @umd_ip_manager_leases,
+          dropdown_values: [@addable_umd_ip_manager_groups, 'prefixed_key', 'name'],
+          input_disabled: !can_update %>
   </div>
 </div>

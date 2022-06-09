@@ -25,8 +25,12 @@
         self.read_groups.select {|g| IPAddr.new(g) rescue false }
       end
 
+      def umd_ip_manager_read_groups
+        self.read_groups.select {|g| UmdIPManager::Group.valid_prefixed_key?(g) }
+      end
+
       def virtual_read_groups
-        self.read_groups - represented_visibility - local_read_groups - ip_read_groups
+        self.read_groups - represented_visibility - local_read_groups - ip_read_groups - umd_ip_manager_read_groups
       end
     end
 #   end

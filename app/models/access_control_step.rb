@@ -32,7 +32,7 @@ class AccessControlStep < Avalon::Workflow::BasicStep
 
     # Limited access stuff
     limited_access_submit = false
-    ["group", "class", "user", "ipaddress"].each do |title|
+    ["group", "class", "user", "ipaddress", "umd_ip_manager_group"].each do |title|
       if context["submit_add_#{title}"].present?
         limited_access_submit = true
         begin_time = context["add_#{title}_begin"].blank? ? nil : context["add_#{title}_begin"]
@@ -106,6 +106,9 @@ class AccessControlStep < Avalon::Workflow::BasicStep
     context[:groups] = media_object.read_groups
     context[:virtual_groups] = media_object.virtual_read_groups
     context[:ip_groups] = media_object.ip_read_groups
+    # --- TODO --- Make a real implmentation
+    context[:umd_ip_manager_groups] = UmdIPManager.groups
+    # -- end TODO
     context[:group_leases] = media_object.leases('local')
     context[:user_leases] = media_object.leases('user')
     context[:virtual_leases] = media_object.leases('external')

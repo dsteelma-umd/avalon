@@ -3,33 +3,38 @@
 class UmdIPManager
   GROUP_PREFIX = 'umd.ip.manager:'
 
-  def groups
-    groups = retrieve_groups
-    GroupsResult.new(groups: groups)
-  rescue StandardError => e
-    GroupsResult.new(errors: [e.message])
+  def self.groups
+  #   groups = retrieve_groups
+  #   GroupsResult.new(groups: groups)
+  # rescue StandardError => e
+  #   GroupsResult.new(errors: [e.message])
+    umd_ip_manager_group1 = Group.new(base_key: 'ON_CAMPUS', name:'On-campus')
+    umd_ip_manager_group2 = Group.new(base_key: 'HENSON', name:'Henson')
+    groups_result = GroupsResult.new(groups: [umd_ip_manager_group1, umd_ip_manager_group2])
+    umd_ip_manager_groups = groups_result.groups
+    return umd_ip_manager_groups
   end
 
-  def check_ip(group_base_key:, ip_address:)
-    raise ArgumentError, "invalid argument: group_base_key='#{group_base_key}'" unless group_base_key.present?
-    raise ArgumentError, "invalid argument: ip_address='#{ip_address}'" unless ip_address.present?
+  # def check_ip(group_base_key:, ip_address:)
+  #   raise ArgumentError, "invalid argument: group_base_key='#{group_base_key}'" unless group_base_key.present?
+  #   raise ArgumentError, "invalid argument: ip_address='#{ip_address}'" unless ip_address.present?
 
-    begin
-      ip_is_member = do_check_ip(group_base_key: group_base_key, ip_address: ip_address)
-      CheckIPResult.new(ip_is_member: ip_is_member)
-    rescue StandardError => e
-      CheckIPResult.new(errors: [e.message])
-    end
-  end
+  #   begin
+  #     ip_is_member = do_check_ip(group_base_key: group_base_key, ip_address: ip_address)
+  #     CheckIPResult.new(ip_is_member: ip_is_member)
+  #   rescue StandardError => e
+  #     CheckIPResult.new(errors: [e.message])
+  #   end
+  # end
 
-  def retrieve_groups
-    # TODO - returns an array of UmdIPManager::Group, or raises an exception
-  end
+  # def retrieve_groups
+  #   # TODO - returns an array of UmdIPManager::Group, or raises an exception
+  # end
 
-  def do_check_ip(group_base_key:, ip_address:)
-    # TODO - returns true, if the given IP Address is in the given group,
-    # false otherwise. Raise an exception if an error occurs
-  end
+  # def do_check_ip(group_base_key:, ip_address:)
+  #   # TODO - returns true, if the given IP Address is in the given group,
+  #   # false otherwise. Raise an exception if an error occurs
+  # end
 
   class Group
     PREFIX = UmdIPManager::GROUP_PREFIX
@@ -78,20 +83,20 @@ class UmdIPManager
     end
   end
 
-  class CheckIPResult
-    attr_reader :errors
+#   class CheckIPResult
+#     attr_reader :errors
 
-    def initialize(ip_is_member: false, errors: [])
-      @ip_is_member = ip_is_member
-      @errors = errors
-    end
+#     def initialize(ip_is_member: false, errors: [])
+#       @ip_is_member = ip_is_member
+#       @errors = errors
+#     end
 
-    def ip_is_member?
-      @ip_is_member
-    end
+#     def ip_is_member?
+#       @ip_is_member
+#     end
 
-    def success?
-      @errors.empty?
-    end
-  end
+#     def success?
+#       @errors.empty?
+#     end
+#   end
 end
