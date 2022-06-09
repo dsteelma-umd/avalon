@@ -15,6 +15,11 @@ class UmdIPManager
     return umd_ip_manager_groups
   end
 
+  def groups_for_ip(ip_address)
+    groups = []
+    umd_ip_manager_group1 = Group.new(base_key: 'ON_CAMPUS', name:'On-campus')
+    groups.push(umd_ip_manager_group1)
+  end
   # def check_ip(group_base_key:, ip_address:)
   #   raise ArgumentError, "invalid argument: group_base_key='#{group_base_key}'" unless group_base_key.present?
   #   raise ArgumentError, "invalid argument: ip_address='#{ip_address}'" unless ip_address.present?
