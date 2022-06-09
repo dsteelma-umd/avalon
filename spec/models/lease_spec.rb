@@ -195,6 +195,13 @@ describe Lease do
       }.to change{Lease.ip.count}.by(1)
       expect(lease.lease_type).to eq "ip"
     end
+    it 'identifies UMD IP Manager lease_type' do
+      expect {
+        lease.inherited_read_groups = [UmdIPManager::Group.as_prefixed_key('test')]
+        lease.save
+      }.to change{Lease.umd_ip_manager.count}.by(1)
+      expect(lease.lease_type).to eq "umd_ip_manager"
+    end
   end
   describe '#media_objects' do
     let(:media_object) { FactoryBot.create(:media_object) }
