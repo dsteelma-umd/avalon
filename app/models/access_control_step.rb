@@ -81,7 +81,7 @@ class AccessControlStep < Avalon::Workflow::BasicStep
       end
       if context["remove_#{title}"].present?
         limited_access_submit = true
-        if ["group", "class", "ipaddress"].include? title
+        if ["group", "class", "ipaddress", "umd_ip_manager_group"].include? title
           media_object.read_groups -= [context["remove_#{title}"]]
         else
           media_object.read_users -= [context["remove_#{title}"]]
