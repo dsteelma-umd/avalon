@@ -27,6 +27,7 @@ import {
 import AeonRequestForm from './AeonRequestForm';
 import UmdMetadataDisplay from './UmdMetadataDisplay';
 import UmdCopyHandleUrlButton from './UmdCopyHandleUrlButton';
+import UmdMasterFileDownloads from './UmdMasterFileDownloads';
 // End UMD Customization
 import 'video.js/dist/video-js.css';
 import "@samvera/ramp/dist/ramp.css";
@@ -56,6 +57,7 @@ const Ramp = ({
   has_transcripts,
   // UMD Customization
   aeon_request,
+  master_file_downloads,
   umd_metadata
   // End UMD Customization
 }) => {
@@ -286,6 +288,11 @@ const Ramp = ({
                 <SupplementalFiles showHeading={false} />
               </Tab>
             }
+            <Tab eventKey="downloads" title="Downloads">
+              <ul>
+                <UmdMasterFileDownloads masterFiles={master_file_downloads} />
+              </ul>
+            </Tab>
           </Tabs>
         </Col>
       </Row>

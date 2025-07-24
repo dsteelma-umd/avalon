@@ -345,13 +345,23 @@ class MediaObjectsController < ApplicationController
   end
   # End UMD Customization
 
+  def master_files_download_links(masterFiles)
+    masterFiles.map do |master_file|
+      { 
+        fileName: File.basename(master_file.file_location),
+        url: download_master_file_url(id: master_file.id, access_token: @access_token)
+      }
+    end
+  end
+
   def show
     # UMD Customization
     @access_token = params[:access_token]
     @playback_restricted = cannot? :stream, @media_object
     @master_file_download_allowed = master_file_download_allowed?
+    @master_file_download_links = master_files_download_links(@masterFiles)
     # End UMD Customization
-
+    
     respond_to do |format|
       format.html do
         if (not @masterFiles.empty? and @currentStream.blank?) then
