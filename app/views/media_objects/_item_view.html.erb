@@ -60,8 +60,12 @@ Unless required by applicable law or agreed to in writing, software distributed
           referenceNumber: (@media_object.permalink || ""),
           aeonURL: 'https://aeon.lib.umd.edu/Logon/?Action=10&Form=23'
         },
-        umd_metadata: { handleUrl: @media_object.permalink },
+        master_file_downloads: { 
+          canDownload: @master_file_download_allowed,
+          downloads: @master_file_downloads
+        },
         umd_access_control: { playback_restricted: @playback_restricted, jim_hension_collection: in_jim_henson_collection?(@media_object) ? @media_object.collection.name : '' },
+        umd_metadata: { handleUrl: @media_object.permalink }
         # End UMD Customization
       }
     ) %>

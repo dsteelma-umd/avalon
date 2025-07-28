@@ -42,18 +42,3 @@ button.close {
   display: flex;
   justify-content: flex-end;
 }
-
-// UMD Customization
-#download-button {
-  text-align: right;
-  margin-top: 10px;
-  margin-bottom: 0;
-
-  a:link,
-  a:visited,
-  a:hover,
-  a:active {
-    text-decoration: none;
-  }
-}
-// End UMD Customization

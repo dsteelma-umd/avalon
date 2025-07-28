@@ -25,8 +25,9 @@ import {
 } from "@samvera/ramp";
 // UMD Customization
 import AeonRequestForm from './AeonRequestForm';
-import UmdMetadataDisplay from './UmdMetadataDisplay';
 import UmdCopyHandleUrlButton from './UmdCopyHandleUrlButton';
+import UmdMasterFiles from './UmdMasterFiles';
+import UmdMetadataDisplay from './UmdMetadataDisplay';
 import UmdRestrictedPlayback from './UmdRestrictedPlayback';
 // End UMD Customization
 import 'video.js/dist/video-js.css';
@@ -57,8 +58,9 @@ const Ramp = ({
   has_transcripts,
   // UMD Customization
   aeon_request,
-  umd_metadata,
-  umd_access_control
+  master_file_downloads,
+  umd_access_control,
+  umd_metadata
   // End UMD Customization
 }) => {
   const [manifestUrl, setManifestUrl] = React.useState('');
@@ -300,11 +302,19 @@ const Ramp = ({
                 />
               </Tab>
             }
-            {(has_files) &&
+            {/* UMD Customization */}
+            {/* Include master files in "Files" tab */}
+            {(has_files || master_file_downloads.canDownload) &&
               <Tab eventKey="files" title="Files">
-                <SupplementalFiles showHeading={false} />
+                {master_file_downloads.canDownload &&
+                  <UmdMasterFiles masterFiles={master_file_downloads} />
+                }
+                {has_files &&
+                  <SupplementalFiles showHeading={false} />
+                }
               </Tab>
             }
+            {/* End UMD Customization */}
           </Tabs>
         </Col>
       </Row>
